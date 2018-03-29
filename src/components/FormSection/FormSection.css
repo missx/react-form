@@ -1,0 +1,15 @@
+.FormSection {
+    padding: 5% 0;
+}
+
+.Form {
+    padding: 10% 0;
+}
+
+.Inline div{
+    display: inline-table;
+}
+
+.ButtonGroup {
+    margin: 50px 0;
+}
