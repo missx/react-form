@@ -2,6 +2,7 @@ import React from 'react';
 import { Form, Button, Icon } from 'semantic-ui-react';
 
 import InputField from '../InputField/InputField';
+import ErrorMessage from '../ErrorMessage/ErrorMessage';
 import './FormSection.css';
 
 const dayOptions = [
@@ -45,6 +46,7 @@ export default class FormSection extends React.Component {
             errorMonthBirth: false,
             errorEmail: false,
             errorCountry: false,
+            errors: false,
             womanColor: 'black',
             manColor: 'black'
         }
@@ -55,11 +57,14 @@ export default class FormSection extends React.Component {
     }
 
     saveData() {
+        this.setState({
+            errors: false
+        });
         console.log('lljlj')
         console.log('this.state.firstName: ', this.state.firstName);
-        (!this.state.firstName) ? this.setState({errorFirstName: true}) : this.setState({errorFirstName: false});
-        (!this.state.lastName) ? this.setState({errorLastName: true}) : this.setState({errorLastName: false});
-        (!this.state.email) ? this.setState({errorEmail: true}) : this.setState({errorEmail: false});
+        (!this.state.firstName) ? this.setState({errorFirstName: true, errors: true}) : this.setState({errorFirstName: false});
+        (!this.state.lastName) ? this.setState({errorLastName: true, errors: true}) : this.setState({errorLastName: false});
+        (!this.state.email) ? this.setState({errorEmail: true, errors: true}) : this.setState({errorEmail: false});
 
     }
 
@@ -86,11 +91,11 @@ export default class FormSection extends React.Component {
     }
 
     render() {
+
         return (
             <div className="FormSection">
                 <div className="Form">
-                    <Form onSubmit={this.saveData}>
-
+                    <Form onSubmit={this.saveData} error={this.state.errors}>
                         <InputField label='First name' placeholder='John' required={true}
                         inputName="firstName" type="text" onChange={this.valuesOnChange}
                         inputError={this.state.errorFirstName}/>
@@ -125,6 +130,7 @@ export default class FormSection extends React.Component {
                             <label>Country</label>
                             <Form.Select options={countryOptions} placeholder="Choose country" onChange={this.valuesOnChange}/>
                         </Form.Field>
+                        <ErrorMessage header='Error' content='Please review the form.' />
                         <div className="ButtonGroup">
                             <Button color='teal' type="submit">Save</Button>
                         </div>
