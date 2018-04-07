@@ -7,7 +7,7 @@ export default function SideSection(props) {
 
     return (
         <div className="SideSection">
-            <Image className=" " src={require('../../assets/images/cute_girl.svg')} size='small'
+            <Image className="Image" src={require('../../assets/images/cute_girl.svg')} size='small'
             centered circular/>
         </div>
     );

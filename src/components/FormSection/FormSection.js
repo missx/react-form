@@ -3,6 +3,7 @@ import { Form, Button, Icon } from 'semantic-ui-react';
 
 import InputField from '../InputField/InputField';
 import ErrorMessage from '../ErrorMessage/ErrorMessage';
+import FileInput from '../FileInput/FileInput';
 import './FormSection.css';
 
 const dayOptions = [
@@ -48,11 +49,13 @@ export default class FormSection extends React.Component {
             errorCountry: false,
             errors: false,
             womanColor: 'black',
-            manColor: 'black'
+            manColor: 'black',
+            fileInput: null
         }
 
         this.saveData = this.saveData.bind(this);
         this.valuesOnChange = this.valuesOnChange.bind(this);
+        this.onUpload = this.onUpload.bind(this);
         this.setGender = this.setGender.bind(this);
     }
 
@@ -60,16 +63,21 @@ export default class FormSection extends React.Component {
         this.setState({
             errors: false
         });
-        console.log('lljlj')
         console.log('this.state.firstName: ', this.state.firstName);
         (!this.state.firstName) ? this.setState({errorFirstName: true, errors: true}) : this.setState({errorFirstName: false});
         (!this.state.lastName) ? this.setState({errorLastName: true, errors: true}) : this.setState({errorLastName: false});
         (!this.state.email) ? this.setState({errorEmail: true, errors: true}) : this.setState({errorEmail: false});
-
+        console.log('file', this.state.fileInput.files[0]);
     }
 
     valuesOnChange(e) {
         this.setState({ [e.target.name]: e.target.value });
+    }
+
+    onUpload(input) {
+        this.setState({
+            fileInput: input
+        });
     }
 
     setGender(e) {
@@ -111,7 +119,7 @@ export default class FormSection extends React.Component {
                             <Icon id="man" name='man' size='large' onClick={this.setGender}
                             color={this.state.manColor} link circular inverted/>
                         </Form.Field>
-                        <Form.Group inline>
+                        <Form.Group inline className="DateOfBirth">
                             <Form.Field className="Inline">
                                 <label>Date of Birth</label>
                                 <Form.Select fluid options={dayOptions} placeholder="Day" onChange={this.valuesOnChange}/>
@@ -130,6 +138,7 @@ export default class FormSection extends React.Component {
                             <label>Country</label>
                             <Form.Select options={countryOptions} placeholder="Choose country" onChange={this.valuesOnChange}/>
                         </Form.Field>
+                        <FileInput label="Image" onUpload={this.onUpload}/>
                         <ErrorMessage header='Error' content='Please review the form.' />
                         <div className="ButtonGroup">
                             <Button color='teal' type="submit">Save</Button>
