@@ -4,6 +4,7 @@ import { Form, Button, Icon } from 'semantic-ui-react';
 import InputField from '../InputField/InputField';
 import ErrorMessage from '../ErrorMessage/ErrorMessage';
 import FileInput from '../FileInput/FileInput';
+import Modal from '../Modal/Modal';
 import './FormSection.css';
 
 const dayOptions = [
@@ -50,7 +51,8 @@ export default class FormSection extends React.Component {
             errors: false,
             womanColor: 'black',
             manColor: 'black',
-            fileInput: null
+            fileInput: null,
+            showModal: false
         }
 
         this.saveData = this.saveData.bind(this);
@@ -63,11 +65,19 @@ export default class FormSection extends React.Component {
         this.setState({
             errors: false
         });
-        console.log('this.state.firstName: ', this.state.firstName);
+
         (!this.state.firstName) ? this.setState({errorFirstName: true, errors: true}) : this.setState({errorFirstName: false});
         (!this.state.lastName) ? this.setState({errorLastName: true, errors: true}) : this.setState({errorLastName: false});
         (!this.state.email) ? this.setState({errorEmail: true, errors: true}) : this.setState({errorEmail: false});
         console.log('file', this.state.fileInput.files[0]);
+
+        // open modal if no errors
+        console.log(this.state.errors)
+        if (!this.state.errors) {
+            this.setState({
+                showModal: true
+            });
+        }
     }
 
     valuesOnChange(e) {
@@ -144,7 +154,7 @@ export default class FormSection extends React.Component {
                             <Button color='teal' type="submit">Save</Button>
                         </div>
                     </Form>
-                    
+                    <Modal isOpen={this.state.showModal} contentLabel="This is a modal"/>
                 </div>
             </div>
         );
