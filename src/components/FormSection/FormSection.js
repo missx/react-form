@@ -59,6 +59,7 @@ export default class FormSection extends React.Component {
         this.valuesOnChange = this.valuesOnChange.bind(this);
         this.onUpload = this.onUpload.bind(this);
         this.setGender = this.setGender.bind(this);
+        this.closeModal = this.closeModal.bind(this);
     }
 
     saveData() {
@@ -71,17 +72,26 @@ export default class FormSection extends React.Component {
         (!this.state.email) ? this.setState({errorEmail: true, errors: true}) : this.setState({errorEmail: false});
         console.log('file', this.state.fileInput.files[0]);
 
+        let modalInformation = {
+            name: `${this.state.firstName} ${this.state.lastName}`,
+            gender: this.state.gender,
+            dob: `${this.state.dayBirth} ${this.state.monthBirth} ${this.state.yearBirth}`,
+            email: this.state.email,
+            country: this.state.country
+        }
         // open modal if no errors
-        console.log(this.state.errors)
+        console.log(this.state.errors);
         if (!this.state.errors) {
             this.setState({
+                modalInformation,
                 showModal: true
             });
         }
+        console.log(this.state.errors);
     }
 
-    valuesOnChange(e) {
-        this.setState({ [e.target.name]: e.target.value });
+    valuesOnChange(e, { name, value }) {
+        this.setState({ [name]: value });
     }
 
     onUpload(input) {
@@ -108,7 +118,20 @@ export default class FormSection extends React.Component {
         }
     }
 
+    closeModal() {
+        this.setState({
+            showModal: false
+        });
+    }
+
     render() {
+
+        let modal = this.state.showModal ?
+                    (<Modal
+                        isOpen={this.state.showModal}
+                        close={this.closeModal}
+                        modalInformation={this.state.modalInformation}/>) :
+                    '';
 
         return (
             <div className="FormSection">
@@ -132,13 +155,16 @@ export default class FormSection extends React.Component {
                         <Form.Group inline className="DateOfBirth">
                             <Form.Field className="Inline">
                                 <label>Date of Birth</label>
-                                <Form.Select fluid options={dayOptions} placeholder="Day" onChange={this.valuesOnChange}/>
+                                <Form.Select fluid name='dayBirth' options={dayOptions} placeholder="Day"
+                                    onChange={this.valuesOnChange}/>
                             </Form.Field>
                             <Form.Field className="Inline">
-                                <Form.Select fluid options={monthOptions} placeholder="Month" onChange={this.valuesOnChange}/>
+                                <Form.Select fluid name='monthBirth' options={monthOptions} placeholder="Month"
+                                    onChange={this.valuesOnChange}/>
                             </Form.Field>
                             <Form.Field className="Inline">
-                                <Form.Select fluid options={yearOptions} placeholder="Year" onChange={this.valuesOnChange}/>
+                                <Form.Select fluid name='yearBirth' options={yearOptions} placeholder="Year"
+                                    onChange={this.valuesOnChange}/>
                             </Form.Field>
                         </Form.Group>
                         <InputField label='Email' placeholder='johndoe@mail.com' required={true}
@@ -146,7 +172,8 @@ export default class FormSection extends React.Component {
                         inputError={this.state.errorEmail}/>                        
                         <Form.Field inline className="Inline">
                             <label>Country</label>
-                            <Form.Select options={countryOptions} placeholder="Choose country" onChange={this.valuesOnChange}/>
+                            <Form.Select options={countryOptions} name='country'
+                                placeholder="Choose country" onChange={this.valuesOnChange}/>
                         </Form.Field>
                         <FileInput label="Image" onUpload={this.onUpload}/>
                         <ErrorMessage header='Error' content='Please review the form.' />
@@ -154,7 +181,7 @@ export default class FormSection extends React.Component {
                             <Button color='teal' type="submit">Save</Button>
                         </div>
                     </Form>
-                    <Modal isOpen={this.state.showModal} contentLabel="This is a modal"/>
+                    { modal }
                 </div>
             </div>
         );
